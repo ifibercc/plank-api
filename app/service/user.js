@@ -2,14 +2,17 @@
 
 module.exports = app => {
   return class User extends app.Service {
-    * find(uid) {
-      // 假如 我们拿到用户 id 从数据库获取用户详细信息
+    * findByNickName(nickName) {
       const user = yield app.mysql.get('user', {
-        id: 1,
+        nickName,
       });
-      return {
-        user,
-      };
+      return user;
+    }
+    * createUser(userInfo) {
+      const result = yield app.mysql.insert('user', Object.assign({}, userInfo, {
+        registerDate: new Date(),
+      }));
+      return result;
     }
   };
 };
